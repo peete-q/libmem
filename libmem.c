@@ -163,11 +163,30 @@ void libmem_delete(libmem* self) {
 }
 
 void* libmem_alloc(libmem* self, size_t size) {
-	size_t i, realsize = size + sizeof(libmem_Segment);
+	size_t i, min, max, realsize;
+	realsize = size + sizeof(libmem_Segment);
 	assert(realsize <= (1 << self->maxlevel));
 	
-	for (i = self->minlevel; i < self->maxlevel; ++i)
-		if (realsize <= (1 << i)) break;
+	if (realsize > (1 << (self->minlevel + 3)))
+	{
+		min = self->minlevel;
+		max = self->maxlevel;
+		
+		while (max - min > 1)
+		{
+			i = (min + max) >> 1;
+			if (realsize > (1 << i))
+				min = i;
+			else
+				max = i;
+		}
+	}
+	else 
+	{
+		for (i = self->minlevel; i < self->maxlevel; ++i)
+			if (realsize <= (1 << i))
+				break;
+	}
 	return libmem_allocbylevel(self, i);
 }
 
@@ -199,4 +218,3 @@ int libmem_free(libmem* self, void* ptr) {
 	}
 	return 0;
 }
-
