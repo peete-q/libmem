@@ -1,5 +1,6 @@
 
 #include "stdlib.h"
+#include "stdint.h"
 #include "time.h"
 #include "libmem.h"
 
@@ -12,14 +13,14 @@ char* getarg(int argc, char** argv, char* name, char* def) {
 }
 
 void main(int argc, char** argv) {
-	int i, j, k, s, size, count, level, min, max;
+	int i, j, k, s, size, count, usecase, min, max;
 	void** ptr;
 	
 	size = atoi(getarg(argc, argv, "-s=", "256"));
-	count = atoi(getarg(argc, argv, "-c=", "10000"));
-	level = atoi(getarg(argc, argv, "-l=", "14"));
+	count = atoi(getarg(argc, argv, "-c=", "100000"));
+	usecase = pow(2, atoi(getarg(argc, argv, "-u=", "14")));
 	min = atoi(getarg(argc, argv, "-min=", "8"));
-	max = atoi(getarg(argc, argv, "-min=", "28"));
+	max = atoi(getarg(argc, argv, "-max=", "28"));
 	
 	ptr = (void**) malloc(sizeof(void*) * size);
 	s = rand();
@@ -31,7 +32,7 @@ void main(int argc, char** argv) {
 	{
 		i = rand() % size;
 		for (j = 0; j < i; ++j)
-			ptr[j] = libmem_alloc(self, rand() % level);
+			ptr[j] = libmem_alloc(self, (uint64_t)rand() * usecase / RAND_MAX);
 		for (j = 0; j < i; ++j)
 			libmem_free(self, ptr[j]);
 	}
@@ -43,7 +44,7 @@ void main(int argc, char** argv) {
 	{
 		i = rand() % size;
 		for (j = 0; j < i; ++j)
-			ptr[j] = malloc(rand() % level);
+			ptr[j] = malloc((uint64_t)rand() * usecase / RAND_MAX);
 		for (j = 0; j < i; ++j)
 			free(ptr[j]);
 	}
