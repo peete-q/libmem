@@ -1,8 +1,10 @@
 
 CC = gcc
-CFLAGS = -g
-LFLAGS = -static-libgcc -Wl,-subsystem,console
-TARGET = libmem.exe
+CFLAGS = -W -Wall -ggdb
+LFLAGS = 
+TARGET = libmem.a
+TEST = test
+AR = ar rcu
 
 SRC = $(wildcard *.c)
 OBJ = $(patsubst %.c, %.o, $(SRC))
@@ -11,7 +13,8 @@ OBJ = $(patsubst %.c, %.o, $(SRC))
 	$(CC) $(CFLAGS) -o $@ -c $<
 	
 all : $(OBJ)
-	$(CC) -o $(TARGET) $(OBJ) $(LFLAGS)
+	$(AR) -o $(TARGET) $(OBJ) $(LFLAGS)
+	$(CC) -o $(TEST) $(OBJ) $(LFLAGS)
 
 clean :
 	rm -f $(TARGET) $(OBJ)
