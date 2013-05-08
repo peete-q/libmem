@@ -1,7 +1,8 @@
 
-#include "stdlib.h"
-#include "stdint.h"
-#include "time.h"
+#include <stdlib.h>
+#include <stdint.h>
+#include <time.h>
+
 #include "libmem.h"
 
 char* getarg(int argc, char** argv, char* name, char* def) {
@@ -24,7 +25,7 @@ void main(int argc, char** argv) {
 	
 	ptr = (void**) malloc(sizeof(void*) * size);
 	s = rand();
-	libmem* self = libmem_new(min, max);
+	struct libmem* self = libmem_new(min, max);
 	
 	clock_t c = clock();
 	srand(s);
