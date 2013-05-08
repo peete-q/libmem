@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
@@ -17,11 +16,11 @@ void main(int argc, char** argv) {
 	int i, j, k, s, size, count, usecase, min, max;
 	void** ptr;
 	
-	size = atoi(getarg(argc, argv, "-s=", "256"));
-	count = atoi(getarg(argc, argv, "-c=", "100000"));
-	usecase = pow(2, atoi(getarg(argc, argv, "-u=", "14")));
-	min = atoi(getarg(argc, argv, "-min=", "8"));
-	max = atoi(getarg(argc, argv, "-max=", "28"));
+	size = atoi(getarg(argc, argv, "s=", "256"));
+	count = atoi(getarg(argc, argv, "c=", "100000"));
+	usecase = pow(2, atoi(getarg(argc, argv, "u=", "14")));
+	min = atoi(getarg(argc, argv, "min=", "8"));
+	max = atoi(getarg(argc, argv, "max=", "28"));
 	
 	ptr = (void**) malloc(sizeof(void*) * size);
 	s = rand();
