@@ -36,9 +36,9 @@ static void libmem_resizenode(struct libmem* self, size_t size) {
 	struct libmem_Node* node;
 	
 	if (self->node)
-		node = (struct libmem_Node*) realloc(self->node, sizeof(libmem_Node) * size);
+		node = (struct libmem_Node*) realloc(self->node, sizeof(struct libmem_Node) * size);
 	else
-		node = (struct libmem_Node*) malloc(sizeof(libmem_Node) * size);
+		node = (struct libmem_Node*) malloc(sizeof(struct libmem_Node) * size);
 	
 	if (node)
 	{
@@ -154,7 +154,7 @@ struct libmem* libmem_new(size_t minlevel, size_t maxlevel) {
 	size_t i;
 	assert(minlevel < maxlevel);
 	
-	self = (struct libmem*) malloc(sizeof(libmem));
+	self = (struct libmem*) malloc(sizeof(struct libmem));
 	self->base = (char*) malloc(sizeof(char) * (1 << maxlevel));
 	self->free = (size_t*) malloc(sizeof(size_t) * (maxlevel - minlevel));
 	self->minlevel = minlevel;
@@ -188,7 +188,7 @@ void libmem_delete(struct libmem* self) {
 
 void* libmem_alloc(struct libmem* self, size_t size) {
 	size_t i, min, max, realsize;
-	realsize = size + sizeof(libmem_Segment);
+	realsize = size + sizeof(struct libmem_Segment);
 	assert(realsize <= (1 << self->maxlevel));
 	
 	if (realsize > (1 << (self->minlevel + 3)))
@@ -220,8 +220,8 @@ void* libmem_realloc(struct libmem* self, void* ptr, size_t size) {
 	base = (char*) ptr;
 	if (self->base <= base && base < self->base + (1 << self->maxlevel))
 	{
-		segment = (struct libmem_Segment*)(base - sizeof(libmem_Segment));
-		if ((1 << self->node[segment->node].level) - sizeof(libmem_Segment) >= size)
+		segment = (struct libmem_Segment*)(base - sizeof(struct libmem_Segment));
+		if ((1 << self->node[segment->node].level) - sizeof(struct libmem_Segment) >= size)
 			return ptr;
 			
 		libmem_free(self, ptr);
@@ -236,7 +236,7 @@ int libmem_free(struct libmem* self, void* ptr) {
 	base = (char*) ptr;
 	if (self->base <= base && base < self->base + (1 << self->maxlevel))
 	{
-		segment = (struct libmem_Segment*)(base - sizeof(libmem_Segment));
+		segment = (struct libmem_Segment*)(base - sizeof(struct libmem_Segment));
 		libmem_combinnode(self, segment->node);
 		return 1;
 	}
