@@ -1,4 +1,3 @@
-
 #include "libmem.h"
 
 #include <assert.h>
@@ -12,10 +11,10 @@ struct libmem_Segment {
 };
 
 struct libmem_Node {
-	size_t sibling	: 30;
-	size_t parent	: 30;
-	size_t prevous	: 30;
-	size_t next		: 30;
+	size_t sibling;
+	size_t parent;
+	size_t prevous;
+	size_t next;
 	size_t level	: 7;
 	size_t free		: 1;
 	struct libmem_Segment* segment;
