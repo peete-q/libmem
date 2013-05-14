@@ -6,7 +6,7 @@
 
 
 struct libmem_Segment {
-	size_t node;
+	size_t index;
 	char base[0];
 };
 
@@ -82,13 +82,13 @@ static size_t libmem_splitnode(struct libmem* self, size_t parent) {
 	self->node[i].sibling = j;
 	self->node[i].level = node->level - 1;
 	self->node[i].segment = node->segment;
-	self->node[i].segment->node = i;
+	self->node[i].segment->index = i;
 	
 	self->node[j].parent = parent;
 	self->node[j].sibling = i;
 	self->node[j].level = node->level - 1;
 	self->node[j].segment = (struct libmem_Segment*) ((char*)node->segment + (1 << (node->level - 1)));
-	self->node[j].segment->node = j;
+	self->node[j].segment->index = j;
 	
 	k = self->free[node->level - self->minlevel - 1];
 	self->node[j].prevous = INVALID;
@@ -173,7 +173,7 @@ struct libmem* libmem_new(size_t minlevel, size_t maxlevel) {
 	self->node[i].next = INVALID;
 	
 	self->node[i].segment = (struct libmem_Segment*) self->base;
-	self->node[i].segment->node = i;
+	self->node[i].segment->index = i;
 	self->node[i].level = maxlevel;
 	return self;
 }
@@ -220,7 +220,7 @@ void* libmem_realloc(struct libmem* self, void* ptr, size_t size) {
 	if (self->base <= base && base < self->base + (1 << self->maxlevel))
 	{
 		segment = (struct libmem_Segment*)(base - sizeof(struct libmem_Segment));
-		if ((1 << self->node[segment->node].level) - sizeof(struct libmem_Segment) >= size)
+		if ((1 << self->node[segment->index].level) - sizeof(struct libmem_Segment) >= size)
 			return ptr;
 			
 		libmem_free(self, ptr);
@@ -236,7 +236,7 @@ int libmem_free(struct libmem* self, void* ptr) {
 	if (self->base <= base && base < self->base + (1 << self->maxlevel))
 	{
 		segment = (struct libmem_Segment*)(base - sizeof(struct libmem_Segment));
-		libmem_combinnode(self, segment->node);
+		libmem_combinnode(self, segment->index);
 		return 1;
 	}
 	return 0;
