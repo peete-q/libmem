@@ -71,10 +71,11 @@ static void libmem_freenode(struct libmem* self, size_t i) {
 
 static size_t libmem_splitnode(struct libmem* self, size_t parent) {
 	size_t i, j, k;
-	struct libmem_Node* node = &self->node[parent];
+	struct libmem_Node* node;
 	
 	i = libmem_allocnode(self);
 	j = libmem_allocnode(self);
+	node = &self->node[parent];
 	if (i == INVALID || j == INVALID)
 		return INVALID;
 		
