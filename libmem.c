@@ -211,7 +211,7 @@ void* libmem_alloc(struct libmem* self, size_t size) {
 		else
 			max = i;
 	}
-	return libmem_allocbylevel(self, i);
+	return libmem_allocbylevel(self, max);
 }
 
 void* libmem_realloc(struct libmem* self, void* ptr, size_t size) {
