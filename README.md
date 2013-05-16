@@ -1,4 +1,4 @@
 libmem
 ======
 
-A c fast memory allocator  library, implement with buddy system and free list
+A fast C memory allocator  library, implement with buddy system and free list
